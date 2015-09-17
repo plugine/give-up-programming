@@ -87,7 +87,7 @@ V11包含三个部分，网络请求，缓存系统和基础工具库，接下�
 
 首先是数据传递的interface，这是一个范型interface，方便传递所有类型的数据
 
-```
+```java
 public interface NetDataListener<T> {
 	void onData(T data);
 }
@@ -96,7 +96,7 @@ public interface NetDataListener<T> {
 
 再观察V10的代码，是不是觉察到有很多的重复代码，比如AsyncHttpResponseHandler，仅仅是返回数据不同，因为网络返回code的规范化，我们可以用模版来处理不同数据的问题，下列代码来源于ServerManager
 
-```
+```java
 public static AsyncHttpResponseHandler getHandler(final NetDataListener listener, final Class<? extends BeanBase> t)){
 	return new AsyncHttpResponseHandler(){
 		@Override
@@ -116,7 +116,7 @@ public static AsyncHttpResponseHandler getHandler(final NetDataListener listener
 
 然后是通用的解析json的代码
 
-```
+```java
 public static <T extends BeanBase> T parseJson(String json, Class<T> type){
 	if(json != null){
 		try{
