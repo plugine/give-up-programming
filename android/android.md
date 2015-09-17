@@ -15,7 +15,7 @@ v10架构适用于少量网络请求的小型应用程序，仅包含网络访�
 
 架构图如下
 
-![image](http://)
+![image](https://raw.githubusercontent.com/plugine/give-up-programming/master/images/v10-structure.png)
 
 ### 前台架构
 
