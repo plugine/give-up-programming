@@ -15,7 +15,62 @@ v10架构适用于少量网络请求的小型应用程序，仅包含网络访�
 
 架构图如下
 
-![image](http://)
+![image](https://raw.githubusercontent.com/plugine/give-up-programming/master/images/v10-structure.png)
+
+如图，Logic.java即是应用的核心，一个示例如下(使用AsyncHttpClient库做网络请求)
+
+```java
+class Logic {
+	private static String LOGIN_URL= ServerManager.SERVER_API_ROOT + "/auth/login";
+	
+	public static void Login(String userName, String password, OnDataListener listener){
+		AsyncHttpClient client = ServerManager.GetClient();
+		RequestParams params = new RequestParams();
+		params.put("user_name", userName);
+		params.put("password", password);
+		client.Post(LOGIN_URL, params, new AsyncHttpRequestHandler(){
+			@Override
+			public void onSuccess(int statusCode, []byte responseBody){
+				String json = new String(responseBody);
+				jsonObject = Json.parseObject(json);
+				if(jsonObject.containKey("code"))){
+					int code = jsonObject.getString("code");
+					switch(code){
+						case 200:
+							listener.onData(jsonObject);
+							break;
+						case 404:
+							listener.onData(jsonObject);
+							Log.d("Logic.Login", "用户不存在");
+							break;
+						case 422:
+							listener.onData(null);
+							Log.d("Logic.Login", "密码错误");
+							break;
+						default:
+							listener.onData(null);
+							Log.d("Logic.Login", "未知错误");
+					}
+				}else{
+					listener.onData(null);
+				}
+			}
+			
+			@Override
+			public void onFailure(int statusCode, []byte responseBody){
+				String response = new String(responseBody);
+				if(response == null){
+					Log.d("Logic.Login", "本地网络未连接");
+					return;
+				}
+				Log.d("Logic.Login", "发生错误，服务器返回状态码:"+statusCode);
+				listener.onData(null);
+			}
+		});
+	}
+}
+```
+
 
 ### 前台架构
 
